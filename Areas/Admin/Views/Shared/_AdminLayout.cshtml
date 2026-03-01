@@ -1,0 +1,61 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <div class="d-flex">
+        <aside class="admin-sidebar p-3">
+            <div class="mb-4">
+                <h4 class="text-cream">Admin Panel</h4>
+            </div>
+
+            <nav class="nav flex-column">
+                <a class="nav-link text-cream" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="fa-solid fa-gauge-high me-2"></i>Dashboard</a>
+                <a class="nav-link text-cream" asp-area="Admin" asp-controller="Products" asp-action="Index"><i class="fa-solid fa-box-open me-2"></i>Products</a>
+                <a class="nav-link text-cream" asp-area="Admin" asp-controller="Categories" asp-action="Index"><i class="fa-solid fa-tags me-2"></i>Categories</a>
+                <a class="nav-link text-cream" asp-area="Admin" asp-controller="Orders" asp-action="Index"><i class="fa-solid fa-receipt me-2"></i>Orders</a>
+                <a class="nav-link text-cream" asp-area="Admin" asp-controller="Users" asp-action="Index"><i class="fa-solid fa-users me-2"></i>Users</a>
+            </nav>
+        </aside>
+
+        <div class="flex-grow-1 p-4" style="background-color:#f8f9fa;">
+            <header class="admin-top mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">@ViewData["Title"]</h4>
+                    <div>
+                        <a class="btn btn-sm btn-outline-secondary" asp-area="" asp-controller="Home" asp-action="Index">
+                            <i class="fa-solid fa-home me-1"></i> View Site
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            @if (TempData["success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fa-solid fa-check-circle me-2"></i>@TempData["success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/admin.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Mobile_Store.Models.Product>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container mt-4">
+    <section class="hero mb-5">
+        <div class="row align-items-center">
+            <div class="col-md-7">
+                <h1 class="title">Discover Elegance in Mobile Technology</h1>
+                <p class="lead text-light">Handpicked premium devices for the discerning user.</p>
+                <a asp-controller="Product" asp-action="Index" class="btn cta mt-3 hero-cta">Shop Now</a>
+            </div>
+            <div class="col-md-5 text-end">
+                <img src="/images/hero-product.png" alt="Hero" style="max-width:320px;" />
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <h4 class="mb-4">Categories</h4>
+        <div class="row g-3">
+            @if (ViewBag.Categories != null)
+            {
+                foreach (var c in ViewBag.Categories as List<Mobile_Store.Models.Category>)
+                {
+                    <div class="col-auto">
+                        <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@c.Id" class="text-decoration-none">
+                            <div class="admin-card text-center p-3" style="min-width:120px;">
+                                <i class="fa-solid fa-mobile-screen-button fa-2x text-primary mb-2"></i>
+                                <div class="mt-2 text-dark"><strong>@c.Name</strong></div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+    </section>
+
+    <section>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Featured Products</h4>
+            <a asp-controller="Product" asp-action="Index" class="text-muted small">View all →</a>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var p in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="product-card h-100">
+                        <div class="img-wrap">
+                            <img src="@(string.IsNullOrEmpty(p.ImageUrl) ? "/images/placeholder.png" : p.ImageUrl)" alt="@p.Name" />
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <h6 class="mb-1">@p.Name</h6>
+                                <div class="text-muted small">@p.Category?.Name</div>
+                            </div>
+                            <div class="price mb-3">$@p.Price.ToString("0.00")</div>
+
+                            <div class="d-flex gap-2">
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="btn btn-outline-primary btn-sm flex-grow-1">View</a>
+                                <form asp-controller="Cart" asp-action="Add" method="post" class="mb-0 flex-grow-1">
+                                    <input type="hidden" name="productId" value="@p.Id" />
+                                    <input type="hidden" name="quantity" value="1" />
+                                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</div>

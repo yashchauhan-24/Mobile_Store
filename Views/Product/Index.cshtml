@@ -1,0 +1,58 @@
+@model IEnumerable<Mobile_Store.Models.Product>
+@{
+    ViewData["Title"] = ViewBag.CategoryName != null ? ViewBag.CategoryName : "All Products";
+}
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="mb-3">@ViewData["Title"]</h2>
+            
+            <div class="d-flex gap-2 mb-4 flex-wrap">
+                <a asp-controller="Product" asp-action="Index" class="btn btn-sm btn-outline-primary">All Products</a>
+                @if (ViewBag.Categories != null)
+                {
+                    foreach (var cat in ViewBag.Categories)
+                    {
+                        <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@cat.Id" 
+                           class="btn btn-sm btn-outline-primary">@cat.Name</a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="admin-card text-center py-5">
+            <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+            <h4>No products found</h4>
+            <p class="text-muted">Check back later for new products!</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var product in Model)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-card h-100">
+                        <div class="img-wrap">
+                            <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "/images/placeholder.png" : product.ImageUrl)" 
+                                 alt="@product.Name" class="card-img-top" />
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">@product.Name</h6>
+                            <p class="small text-muted mb-2">@product.Category?.Name</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price">$@product.Price.ToString("0.00")</span>
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" 
+                                   class="btn btn-sm btn-outline-primary">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

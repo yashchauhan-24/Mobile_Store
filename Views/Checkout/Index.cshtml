@@ -1,0 +1,83 @@
+@model IEnumerable<Mobile_Store.Models.CartItem>
+@{
+    ViewData["Title"] = "Checkout";
+    var total = Model.Sum(item => item.Quantity * (item.Product?.Price ?? 0));
+}
+
+<div class="container my-5">
+    <h2 class="mb-4"><i class="fa-solid fa-credit-card me-2"></i>Checkout</h2>
+
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="admin-card">
+                <h5 class="mb-3">Order Summary</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(item.Product?.ImageUrl))
+                                            {
+                                                <img src="@item.Product.ImageUrl" alt="@item.Product.Name" 
+                                                     style="width:50px;height:50px;object-fit:cover;border-radius:4px;" class="me-3" />
+                                            }
+                                            <strong>@item.Product?.Name</strong>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">$@item.Product?.Price.ToString("0.00")</td>
+                                    <td class="align-middle">@item.Quantity</td>
+                                    <td class="align-middle"><strong>$@((item.Quantity * item.Product!.Price).ToString("0.00"))</strong></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="admin-card">
+                <h5 class="mb-3">Payment Details</h5>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal:</span>
+                    <strong>$@total.ToString("0.00")</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Shipping:</span>
+                    <strong>Free</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Tax:</span>
+                    <strong>$0.00</strong>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between mb-4">
+                    <strong>Total:</strong>
+                    <strong class="h5 text-primary">$@total.ToString("0.00")</strong>
+                </div>
+
+                <form asp-controller="Checkout" asp-action="PlaceOrder" method="post">
+                    <button type="submit" class="btn btn-success w-100 mb-2">
+                        <i class="fa-solid fa-check me-2"></i>Place Order
+                    </button>
+                </form>
+                
+                <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary w-100">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Back to Cart
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

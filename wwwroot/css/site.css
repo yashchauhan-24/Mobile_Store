@@ -1,0 +1,69 @@
+/* Theme colors */
+:root{
+  --primary: #5C3A21; /* Rich Brown */
+  --secondary: #8B5E3C; /* Soft Brown */
+  --background: #F5EBDD; /* Cream */
+  --card-bg: #FFF9F2; /* Card background */
+  --accent: #D2B48C; /* Luxury Gold Cream */
+  --text-dark: #2E2E2E;
+}
+
+/* Base */
+body.bg-cream{background:var(--background);color:var(--text-dark);font-family:'Poppins',sans-serif}
+.brand-logo{width:48px;height:48px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--primary);color:#fff;font-weight:700;font-family:'Playfair Display',serif}
+.brand-text{font-family:'Playfair Display',serif;font-weight:700;color:var(--primary);font-size:1.1rem}
+.text-cream{color:var(--background)}
+
+/* Navbar */
+#mainNavbar{background:linear-gradient(180deg, rgba(255,249,242,0.6), rgba(245,235,221,0.8));backdrop-filter: blur(4px);transition:box-shadow .25s ease,background .25s ease}
+#mainNavbar.nav-scrolled{box-shadow:0 6px 20px rgba(46,46,46,0.12);background:linear-gradient(180deg,var(--background),#fff)}
+.nav-menu{color:var(--text-dark);font-weight:500}
+.icon-link{color:var(--text-dark)}
+
+/* Alerts */
+.premium-alert-success{background:linear-gradient(90deg,var(--accent),var(--secondary));color:var(--text-dark);border:0}
+.premium-alert-danger{background:linear-gradient(90deg,#f8d7da,#f5b7b1);color:#2e2e2e;border:0}
+
+/* Hero */
+.hero{background-image:linear-gradient(180deg,rgba(92,58,33,0.6),rgba(245,235,221,0.2)), url('/images/hero.jpg');background-size:cover;background-position:center;border-radius:12px;padding:80px 40px;color:#fff}
+.hero .title{font-family:'Playfair Display',serif;font-size:3rem;color:var(--card-bg);}
+.hero .cta{background:var(--primary);color:#fff;border-radius:8px;padding:12px 24px;font-weight:600}
+
+/* Product Card */
+.product-card{background:var(--card-bg);border-radius:12px;border:0;overflow:hidden;box-shadow:0 10px 30px rgba(46,46,46,0.06);transition:transform .25s ease,box-shadow .25s ease}
+.product-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(46,46,46,0.12)}
+.product-card .img-wrap{overflow:hidden;border-radius:12px 12px 0 0;height:220px}
+.product-card img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.product-card:hover img{transform:scale(1.06)}
+.product-card .card-body{padding:18px}
+.product-card .card-img-top{height:220px;object-fit:cover}
+.price{color:var(--primary);font-weight:700;font-size:1.1rem}
+.btn-primary{background:var(--primary);border:0}
+.btn-primary:hover{background:var(--secondary)}
+.btn-outline-primary{border-color:var(--primary);color:var(--primary)}
+.btn-outline-primary:hover{background:var(--primary);color:#fff}
+
+/* Footer */
+.site-footer{background:var(--primary);color:var(--background)}
+.site-footer a.footer-link{color:var(--background);text-decoration:none}
+.site-footer .text-cream{color:var(--background)}
+
+/* Admin Layout */
+.admin-sidebar{width:240px;background:var(--primary);color:var(--background);min-height:100vh}
+.admin-sidebar a{color:var(--background);display:block;padding:12px 18px;text-decoration:none;transition:background .2s ease;border-radius:6px;margin-bottom:4px}
+.admin-sidebar a:hover{background:rgba(255,255,255,0.1)}
+.admin-sidebar a.active{background:rgba(255,255,255,0.2);font-weight:600}
+.admin-top{background:var(--card-bg);padding:12px 18px;border-radius:8px;box-shadow:0 2px 8px rgba(46,46,46,0.08)}
+.admin-card{background:var(--card-bg);border-radius:8px;padding:18px;box-shadow:0 10px 30px rgba(46,46,46,0.06);transition:transform .2s ease,box-shadow .2s ease}
+.admin-card:hover{transform:translateY(-2px);box-shadow:0 15px 40px rgba(46,46,46,0.1)}
+a .admin-card{cursor:pointer}
+
+/* Misc */
+.btn-ripple{position:relative;overflow:hidden}
+.btn-ripple:after{content:'';position:absolute;opacity:0;pointer-events:none}
+
+/* Ensure icons visible */
+.icon-link{color:var(--text-dark);opacity:0.95}
+
+/* Responsive tweaks */
+@media (max-width:768px){.hero{padding:40px}.hero .title{font-size:2rem}}
