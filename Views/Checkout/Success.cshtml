@@ -18,7 +18,7 @@
                         <h5 class="mb-3">Order Details</h5>
                         <p class="mb-2"><strong>Order Number:</strong> #@Model.Id</p>
                         <p class="mb-2"><strong>Order Date:</strong> @Model.OrderDate.ToLocalTime().ToString("MMMM dd, yyyy hh:mm tt")</p>
-                        <p class="mb-2"><strong>Total Amount:</strong> <span class="h5 text-success">$@Model.TotalAmount.ToString("0.00")</span></p>
+                        <p class="mb-2"><strong>Total Amount:</strong> <span class="h5 text-success">Rs @Model.TotalAmount.ToString("0.00")</span></p>
                         <p class="mb-0"><strong>Status:</strong> <span class="badge bg-warning">@Model.Status</span></p>
                     </div>
                 </div>

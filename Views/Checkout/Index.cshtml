@@ -35,9 +35,9 @@
                                             <strong>@item.Product?.Name</strong>
                                         </div>
                                     </td>
-                                    <td class="align-middle">$@item.Product?.Price.ToString("0.00")</td>
+                                    <td class="align-middle">Rs @item.Product?.Price.ToString("0.00")</td>
                                     <td class="align-middle">@item.Quantity</td>
-                                    <td class="align-middle"><strong>$@((item.Quantity * item.Product!.Price).ToString("0.00"))</strong></td>
+                                    <td class="align-middle"><strong>Rs @((item.Quantity * item.Product!.Price).ToString("0.00"))</strong></td>
                                 </tr>
                             }
                         </tbody>
@@ -52,7 +52,7 @@
                 
                 <div class="d-flex justify-content-between mb-2">
                     <span>Subtotal:</span>
-                    <strong>$@total.ToString("0.00")</strong>
+                    <strong>Rs @total.ToString("0.00")</strong>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
                     <span>Shipping:</span>
@@ -60,12 +60,12 @@
                 </div>
                 <div class="d-flex justify-content-between mb-2">
                     <span>Tax:</span>
-                    <strong>$0.00</strong>
+                    <strong>Rs 0.00</strong>
                 </div>
                 <hr />
                 <div class="d-flex justify-content-between mb-4">
                     <strong>Total:</strong>
-                    <strong class="h5 text-primary">$@total.ToString("0.00")</strong>
+                    <strong class="h5 text-primary">Rs @total.ToString("0.00")</strong>
                 </div>
 
                 <form asp-controller="Checkout" asp-action="PlaceOrder" method="post">

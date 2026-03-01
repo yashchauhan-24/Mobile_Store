@@ -31,7 +31,7 @@
                 <div class="col-md-6">
                     <h6>Order Information</h6>
                     <p class="mb-1"><strong>Order Date:</strong> @Model.OrderDate.ToLocalTime().ToString("MMMM dd, yyyy hh:mm tt")</p>
-                    <p class="mb-1"><strong>Total Amount:</strong> <span class="h5 text-primary">$@Model.TotalAmount.ToString("0.00")</span></p>
+                    <p class="mb-1"><strong>Total Amount:</strong> <span class="h5 text-primary">Rs @Model.TotalAmount.ToString("0.00")</span></p>
                     <p class="mb-1"><strong>Status:</strong> <span class="badge bg-@(Model.Status == "Delivered" ? "success" : Model.Status == "Cancelled" ? "danger" : "warning")">@Model.Status</span></p>
                 </div>
             </div>
@@ -64,15 +64,15 @@
                                     </div>
                                 </td>
                                 <td>@i.Quantity</td>
-                                <td>$@i.UnitPrice.ToString("0.00")</td>
-                                <td><strong>$@((i.Quantity * i.UnitPrice).ToString("0.00"))</strong></td>
+                                <td>Rs @i.UnitPrice.ToString("0.00")</td>
+                                <td><strong>Rs @((i.Quantity * i.UnitPrice).ToString("0.00"))</strong></td>
                             </tr>
                         }
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                            <td><strong class="text-primary">$@Model.TotalAmount.ToString("0.00")</strong></td>
+                            <td><strong class="text-primary">Rs @Model.TotalAmount.ToString("0.00")</strong></td>
                         </tr>
                     </tfoot>
                 </table>

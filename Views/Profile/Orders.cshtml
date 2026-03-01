@@ -76,7 +76,7 @@
                                         <td><strong>#@order.Id</strong></td>
                                         <td>@order.OrderDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
                                         <td>@order.Items?.Count items</td>
-                                        <td><strong>$@order.TotalAmount.ToString("0.00")</strong></td>
+                                        <td><strong>Rs @order.TotalAmount.ToString("0.00")</strong></td>
                                         <td>
                                             <span class="badge bg-@(order.Status == "Delivered" ? "success" : order.Status == "Cancelled" ? "danger" : "warning")">
                                                 @order.Status
@@ -104,7 +104,7 @@
                                                             <p><strong>Status:</strong> <span class="badge bg-@(order.Status == "Delivered" ? "success" : order.Status == "Cancelled" ? "danger" : "warning")">@order.Status</span></p>
                                                         </div>
                                                         <div class="col-md-6 text-end">
-                                                            <p><strong>Total:</strong> <span class="h5 text-primary">$@order.TotalAmount.ToString("0.00")</span></p>
+                                                            <p><strong>Total:</strong> <span class="h5 text-primary">Rs @order.TotalAmount.ToString("0.00")</span></p>
                                                         </div>
                                                     </div>
 
@@ -126,8 +126,8 @@
                                                                     <tr>
                                                                         <td>@item.Product?.Name</td>
                                                                         <td>@item.Quantity</td>
-                                                                        <td>$@item.UnitPrice.ToString("0.00")</td>
-                                                                        <td><strong>$@((item.Quantity * item.UnitPrice).ToString("0.00"))</strong></td>
+                                                                        <td>Rs @item.UnitPrice.ToString("0.00")</td>
+                                                                        <td><strong>Rs @((item.Quantity * item.UnitPrice).ToString("0.00"))</strong></td>
                                                                     </tr>
                                                                 }
                                                             }

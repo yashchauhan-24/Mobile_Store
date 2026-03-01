@@ -50,7 +50,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="align-middle"><strong>$@item.Product?.Price.ToString("0.00")</strong></td>
+                                        <td class="align-middle"><strong>Rs @item.Product?.Price.ToString("0.00")</strong></td>
                                         <td class="align-middle">
                                             <form asp-controller="Cart" asp-action="UpdateQuantity" method="post" class="d-inline-flex align-items-center gap-2">
                                                 <input type="hidden" name="id" value="@item.Id" />
@@ -60,7 +60,7 @@
                                                 </button>
                                             </form>
                                         </td>
-                                        <td class="align-middle"><strong>$@((item.Quantity * item.Product!.Price).ToString("0.00"))</strong></td>
+                                        <td class="align-middle"><strong>Rs @((item.Quantity * item.Product!.Price).ToString("0.00"))</strong></td>
                                         <td class="align-middle">
                                             <form asp-controller="Cart" asp-action="Remove" method="post">
                                                 <input type="hidden" name="id" value="@item.Id" />
@@ -82,7 +82,7 @@
                     <h5 class="mb-3">Order Summary</h5>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal:</span>
-                        <strong>$@total.ToString("0.00")</strong>
+                        <strong>Rs @total.ToString("0.00")</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Shipping:</span>
@@ -91,7 +91,7 @@
                     <hr />
                     <div class="d-flex justify-content-between mb-3">
                         <strong>Total:</strong>
-                        <strong class="h5 text-primary">$@total.ToString("0.00")</strong>
+                        <strong class="h5 text-primary">Rs @total.ToString("0.00")</strong>
                     </div>
                     <a asp-controller="Checkout" asp-action="Index" class="btn btn-success w-100 mb-2">
                         <i class="fa-solid fa-credit-card me-2"></i>Proceed to Checkout

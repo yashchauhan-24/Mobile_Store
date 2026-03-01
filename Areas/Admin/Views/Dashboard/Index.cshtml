@@ -79,7 +79,7 @@
                         <td><strong>@o.Id</strong></td>
                         <td>@(o.User?.FullName ?? o.User?.Email ?? "N/A")</td>
                         <td>@o.OrderDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
-                        <td><strong>$@o.TotalAmount.ToString("0.00")</strong></td>
+                        <td><strong>Rs @o.TotalAmount.ToString("0.00")</strong></td>
                         <td>
                             <span class="badge bg-@(o.Status == "Delivered" ? "success" : o.Status == "Cancelled" ? "danger" : "warning")">
                                 @o.Status
