@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mobile_Store.Data;
 using Mobile_Store.Models;
+using Mobile_Store.ViewModels;
 using System.Security.Claims;
 
 namespace Mobile_Store.Controllers
@@ -11,10 +13,12 @@ namespace Mobile_Store.Controllers
     public class CheckoutController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CheckoutController(ApplicationDbContext db)
+        public CheckoutController(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -36,12 +40,27 @@ namespace Mobile_Store.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
-            return View(items);
+            // Pre-fill user information
+            var user = await _userManager.GetUserAsync(User);
+            var model = new CheckoutViewModel
+            {
+                CustomerName = user?.FullName ?? "",
+                CustomerPhone = user?.PhoneNumber ?? "",
+                ShippingAddress = !string.IsNullOrEmpty(user?.Address) 
+                    ? $"{user.Address}, {user.City}, {user.State} {user.ZipCode}, {user.Country}"
+                    : "",
+                PaymentMethod = "Cash on Delivery"
+            };
+
+            ViewBag.CartItems = items;
+            ViewBag.Total = items.Sum(i => i.Product!.Price * i.Quantity);
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PlaceOrder()
+        public async Task<IActionResult> PlaceOrder(CheckoutViewModel model)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
@@ -60,12 +79,61 @@ namespace Mobile_Store.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
+            // Validate payment method specific fields
+            if (model.PaymentMethod == "Online Payment")
+            {
+                if (string.IsNullOrEmpty(model.CardNumber) || 
+                    string.IsNullOrEmpty(model.CardHolderName) ||
+                    !model.ExpiryMonth.HasValue || 
+                    !model.ExpiryYear.HasValue ||
+                    string.IsNullOrEmpty(model.CVV))
+                {
+                    ModelState.AddModelError("", "Please provide all card details for online payment.");
+                    ViewBag.CartItems = items;
+                    ViewBag.Total = items.Sum(i => i.Product!.Price * i.Quantity);
+                    return View("Index", model);
+                }
+
+                // Simple card validation
+                if (model.CardNumber.Length < 13 || model.CardNumber.Length > 16)
+                {
+                    ModelState.AddModelError("CardNumber", "Invalid card number.");
+                    ViewBag.CartItems = items;
+                    ViewBag.Total = items.Sum(i => i.Product!.Price * i.Quantity);
+                    return View("Index", model);
+                }
+
+                if (model.CVV.Length < 3 || model.CVV.Length > 4)
+                {
+                    ModelState.AddModelError("CVV", "Invalid CVV.");
+                    ViewBag.CartItems = items;
+                    ViewBag.Total = items.Sum(i => i.Product!.Price * i.Quantity);
+                    return View("Index", model);
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.CartItems = items;
+                ViewBag.Total = items.Sum(i => i.Product!.Price * i.Quantity);
+                return View("Index", model);
+            }
+
+            // Create order
             var order = new Order
             {
                 UserId = userId,
                 OrderDate = DateTime.UtcNow,
                 Status = "Processing",
                 TotalAmount = items.Sum(i => i.Product!.Price * i.Quantity),
+                PaymentMethod = model.PaymentMethod,
+                PaymentStatus = model.PaymentMethod == "Cash on Delivery" ? "Pending" : "Paid",
+                TransactionId = model.PaymentMethod == "Online Payment" 
+                    ? "TXN" + DateTime.Now.Ticks.ToString() 
+                    : null,
+                CustomerName = model.CustomerName,
+                CustomerPhone = model.CustomerPhone,
+                ShippingAddress = model.ShippingAddress,
                 Items = new List<OrderItem>()
             };
 
@@ -83,7 +151,10 @@ namespace Mobile_Store.Controllers
             _db.CartItems.RemoveRange(items);
             await _db.SaveChangesAsync();
 
-            TempData["success"] = "Order placed successfully!";
+            TempData["success"] = model.PaymentMethod == "Online Payment" 
+                ? "Payment successful! Order placed." 
+                : "Order placed successfully! Pay on delivery.";
+            
             return RedirectToAction("Success", new { id = order.Id });
         }
 

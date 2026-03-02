@@ -14,6 +14,7 @@
                     <th>Customer</th>
                     <th>Email</th>
                     <th>Date</th>
+                    <th>Payment</th>
                     <th>Total</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -26,7 +27,21 @@
                         <td><strong>@o.Id</strong></td>
                         <td>@(o.User?.FullName ?? "N/A")</td>
                         <td>@(o.User?.Email ?? o.UserId)</td>
-                        <td>@o.OrderDate.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</td>
+                        <td>@o.OrderDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                        <td>
+                            @if (o.PaymentMethod == "Cash on Delivery")
+                            {
+                                <small><i class="fa-solid fa-hand-holding-dollar me-1"></i>COD</small>
+                            }
+                            else
+                            {
+                                <small><i class="fa-solid fa-credit-card me-1"></i>Online</small>
+                            }
+                            <br />
+                            <span class="badge badge-sm bg-@(o.PaymentStatus == "Paid" ? "success" : "warning")">
+                                @o.PaymentStatus
+                            </span>
+                        </td>
                         <td><strong>Rs @o.TotalAmount.ToString("0.00")</strong></td>
                         <td>
                             <span class="badge bg-@(o.Status == "Delivered" ? "success" : o.Status == "Cancelled" ? "danger" : "warning")">

@@ -102,9 +102,25 @@
                                                         <div class="col-md-6">
                                                             <p><strong>Order Date:</strong> @order.OrderDate.ToLocalTime().ToString("MMMM dd, yyyy hh:mm tt")</p>
                                                             <p><strong>Status:</strong> <span class="badge bg-@(order.Status == "Delivered" ? "success" : order.Status == "Cancelled" ? "danger" : "warning")">@order.Status</span></p>
+                                                            <p><strong>Payment Method:</strong> @order.PaymentMethod</p>
+                                                            <p><strong>Payment Status:</strong> 
+                                                                <span class="badge bg-@(order.PaymentStatus == "Paid" ? "success" : "warning")">
+                                                                    @order.PaymentStatus
+                                                                </span>
+                                                            </p>
+                                                            @if (!string.IsNullOrEmpty(order.TransactionId))
+                                                            {
+                                                                <p><strong>Transaction ID:</strong><br/>
+                                                                <small class="text-muted">@order.TransactionId</small></p>
+                                                            }
                                                         </div>
-                                                        <div class="col-md-6 text-end">
+                                                        <div class="col-md-6">
                                                             <p><strong>Total:</strong> <span class="h5 text-primary">Rs @order.TotalAmount.ToString("0.00")</span></p>
+                                                            @if (!string.IsNullOrEmpty(order.ShippingAddress))
+                                                            {
+                                                                <p><strong>Shipping To:</strong><br/>
+                                                                <small class="text-muted">@order.ShippingAddress</small></p>
+                                                            }
                                                         </div>
                                                     </div>
 

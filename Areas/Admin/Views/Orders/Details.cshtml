@@ -33,6 +33,17 @@
                     <p class="mb-1"><strong>Order Date:</strong> @Model.OrderDate.ToLocalTime().ToString("MMMM dd, yyyy hh:mm tt")</p>
                     <p class="mb-1"><strong>Total Amount:</strong> <span class="h5 text-primary">Rs @Model.TotalAmount.ToString("0.00")</span></p>
                     <p class="mb-1"><strong>Status:</strong> <span class="badge bg-@(Model.Status == "Delivered" ? "success" : Model.Status == "Cancelled" ? "danger" : "warning")">@Model.Status</span></p>
+                    <p class="mb-1"><strong>Payment Method:</strong> @Model.PaymentMethod</p>
+                    <p class="mb-1"><strong>Payment Status:</strong> 
+                        <span class="badge bg-@(Model.PaymentStatus == "Paid" ? "success" : "warning")">
+                            @Model.PaymentStatus
+                        </span>
+                    </p>
+                    @if (!string.IsNullOrEmpty(Model.TransactionId))
+                    {
+                        <p class="mb-1"><strong>Transaction ID:</strong><br/>
+                        <small class="text-muted">@Model.TransactionId</small></p>
+                    }
                 </div>
             </div>
         </div>
