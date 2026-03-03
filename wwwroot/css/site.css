@@ -37,6 +37,7 @@ body.bg-cream{background:var(--background);color:var(--text-dark);font-family:'P
 .product-card:hover img{transform:scale(1.06)}
 .product-card .card-body{padding:18px}
 .product-card .card-img-top{height:220px;object-fit:cover}
+.product-detail-image{width:100%;height:auto;border-radius:12px;object-fit:cover}
 .price{color:var(--primary);font-weight:700;font-size:1.1rem}
 .btn-primary{background:var(--primary);border:0}
 .btn-primary:hover{background:var(--secondary)}
@@ -57,6 +58,27 @@ body.bg-cream{background:var(--background);color:var(--text-dark);font-family:'P
 .admin-card{background:var(--card-bg);border-radius:8px;padding:18px;box-shadow:0 10px 30px rgba(46,46,46,0.06);transition:transform .2s ease,box-shadow .2s ease}
 .admin-card:hover{transform:translateY(-2px);box-shadow:0 15px 40px rgba(46,46,46,0.1)}
 a .admin-card{cursor:pointer}
+
+/* Star Rating Display */
+.star-rating i{font-size:1rem;margin-right:2px}
+.star-rating-large i{font-size:2rem;margin:0 4px}
+.star-rating-small i{font-size:0.9rem;margin-right:2px}
+
+/* Star Rating Input */
+.star-rating-input{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:5px}
+.star-rating-input input[type="radio"]{display:none}
+.star-rating-input label{cursor:pointer;font-size:2rem;color:#ddd;transition:color 0.2s ease}
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label{color:#ffc107}
+.star-rating-input input[type="radio"]:checked ~ label{color:#ffc107}
+
+/* Review Item */
+.review-item{background:var(--card-bg);transition:box-shadow 0.2s ease}
+.review-item:hover{box-shadow:0 4px 12px rgba(46,46,46,0.1)}
+
+/* Badge colors */
+.bg-success-subtle{background-color:#d1e7dd!important}
+.text-success{color:#0f5132!important}
 
 /* Misc */
 .btn-ripple{position:relative;overflow:hidden}

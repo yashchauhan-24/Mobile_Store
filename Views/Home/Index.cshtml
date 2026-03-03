@@ -4,15 +4,12 @@
 }
 
 <div class="container mt-4">
-    <section class="hero mb-5">
-        <div class="row align-items-center">
+    <section class="hero mb-5" style="background-image: url('/images/hiro2.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <div class="row align-items-center h-100">
             <div class="col-md-7">
                 <h1 class="title">Discover Elegance in Mobile Technology</h1>
                 <p class="lead text-light">Handpicked premium devices for the discerning user.</p>
                 <a asp-controller="Product" asp-action="Index" class="btn cta mt-3 hero-cta">Shop Now</a>
-            </div>
-            <div class="col-md-5 text-end">
-                <img src="/images/hero-product.png" alt="Hero" style="max-width:320px;" />
             </div>
         </div>
     </section>
@@ -56,6 +53,29 @@
                                 <h6 class="mb-1">@p.Name</h6>
                                 <div class="text-muted small">@p.Category?.Name</div>
                             </div>
+                            
+                            @if (p.ReviewCount > 0)
+                            {
+                                <div class="star-rating-small mb-2">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= Math.Floor(p.AverageRating))
+                                        {
+                                            <i class="fa-solid fa-star text-warning"></i>
+                                        }
+                                        else if (i == Math.Ceiling(p.AverageRating) && p.AverageRating % 1 >= 0.5)
+                                        {
+                                            <i class="fa-solid fa-star-half-stroke text-warning"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa-regular fa-star text-warning"></i>
+                                        }
+                                    }
+                                    <span class="small text-muted ms-1">(@p.ReviewCount)</span>
+                                </div>
+                            }
+                            
                             <div class="price mb-3">Rs @p.Price.ToString("0.00")</div>
 
                             <div class="d-flex gap-2">

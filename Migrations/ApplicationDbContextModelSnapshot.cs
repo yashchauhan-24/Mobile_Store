@@ -420,7 +420,14 @@ namespace Mobile_Store.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsVerifiedPurchase")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -428,28 +435,21 @@ namespace Mobile_Store.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
+                    b.Property<string>("ReviewerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.HasIndex("ProductId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Comment = "Excellent phone!",
-                            ProductId = 1,
-                            Rating = 5
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Comment = "Good value for money.",
-                            ProductId = 2,
-                            Rating = 4
-                        });
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Mobile_Store.Models.Wishlist", b =>
@@ -577,6 +577,25 @@ namespace Mobile_Store.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Mobile_Store.Models.Review", b =>
+                {
+                    b.HasOne("Mobile_Store.Models.Product", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mobile_Store.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Mobile_Store.Models.Wishlist", b =>
                 {
                     b.HasOne("Mobile_Store.Models.Product", "Product")
@@ -591,6 +610,11 @@ namespace Mobile_Store.Migrations
             modelBuilder.Entity("Mobile_Store.Models.Order", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Mobile_Store.Models.Product", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

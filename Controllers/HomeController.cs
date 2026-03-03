@@ -16,7 +16,11 @@ namespace Mobile_Store.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var featured = await _db.Products.Include(p => p.Category).Take(8).ToListAsync();
+            var featured = await _db.Products
+                .Include(p => p.Category)
+                .Include(p => p.Reviews)
+                .Take(8)
+                .ToListAsync();
             var categories = await _db.Categories.ToListAsync();
             ViewBag.Categories = categories;
             return View(featured);
@@ -29,7 +33,11 @@ namespace Mobile_Store.Controllers
 
         public async Task<IActionResult> Category(int id)
         {
-            var products = await _db.Products.Where(p => p.CategoryId == id).Include(p => p.Category).ToListAsync();
+            var products = await _db.Products
+                .Where(p => p.CategoryId == id)
+                .Include(p => p.Category)
+                .Include(p => p.Reviews)
+                .ToListAsync();
             var categories = await _db.Categories.ToListAsync();
             ViewBag.Categories = categories;
             return View(products);
@@ -37,14 +45,21 @@ namespace Mobile_Store.Controllers
 
         public async Task<IActionResult> Search(string q)
         {
-            var products = await _db.Products.Where(p => p.Name.Contains(q)).Include(p => p.Category).ToListAsync();
+            var products = await _db.Products
+                .Where(p => p.Name.Contains(q))
+                .Include(p => p.Category)
+                .Include(p => p.Reviews)
+                .ToListAsync();
             ViewBag.Query = q;
             return View(products);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var product = await _db.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _db.Products
+                .Include(p => p.Category)
+                .Include(p => p.Reviews)
+                .FirstOrDefaultAsync(p => p.Id == id);
             if (product == null) return NotFound();
             return View(product);
         }

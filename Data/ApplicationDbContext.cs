@@ -33,11 +33,9 @@ namespace Mobile_Store.Data
             builder.Entity<Wishlist>().ToTable("Wishlists");
             builder.Entity<Review>().ToTable("Reviews");
 
-            // Seed some review dummy data (optional safe seed)
-            builder.Entity<Review>().HasData(
-                new Review { Id = 1, ProductId = 1, UserId = null, Rating = 5, Comment = "Excellent phone!" },
-                new Review { Id = 2, ProductId = 2, UserId = null, Rating = 4, Comment = "Good value for money." }
-            );
+            // Optional: remove seed data for Reviews that referenced null UserId
+            // Seeding reviews without valid UserId causes model validation errors because UserId is required.
+            // If you want initial reviews, create a valid ApplicationUser first and reference its Id here.
         }
     }
 }
