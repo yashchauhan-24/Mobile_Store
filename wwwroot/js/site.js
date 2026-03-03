@@ -38,4 +38,57 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Star rating widget behavior
+    document.querySelectorAll('.star-rating-input').forEach(starWrap => {
+        const labels = Array.from(starWrap.querySelectorAll('label'));
+        const radios = Array.from(starWrap.querySelectorAll('input[type="radio"]'));
+
+        function clearHover() {
+            labels.forEach(l => l.classList.remove('hover'));
+        }
+
+        function setSelected() {
+            labels.forEach(l => l.classList.remove('selected'));
+            const checked = radios.find(r => r.checked);
+            if (checked) {
+                const forId = checked.id;
+                const idx = labels.findIndex(l => l.htmlFor === forId);
+                if (idx >= 0) {
+                    for (let i = 0; i <= idx; i++) {
+                        labels[i].classList.add('selected');
+                    }
+                }
+            }
+        }
+
+        labels.forEach((label, index) => {
+            label.addEventListener('mouseenter', () => {
+                clearHover();
+                for (let i = 0; i <= index; i++) {
+                    labels[i].classList.add('hover');
+                }
+            });
+
+            label.addEventListener('mouseleave', () => {
+                clearHover();
+            });
+
+            label.addEventListener('click', () => {
+                const radio = starWrap.querySelector(`#${label.htmlFor}`);
+                if (radio) {
+                    radio.checked = true;
+                    setSelected();
+                }
+            });
+        });
+
+        starWrap.addEventListener('mouseleave', () => {
+            clearHover();
+            setSelected();
+        });
+
+        // initialize selected state from checked radio (for edit or retained values)
+        setSelected();
+    });
 });
