@@ -16,14 +16,18 @@ namespace Mobile_Store.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var featured = await _db.Products
+            // Get featured products (up to 8)
+            var featuredProducts = await _db.Products
                 .Include(p => p.Category)
                 .Include(p => p.Reviews)
+                .OrderByDescending(p => p.Id)
                 .Take(8)
                 .ToListAsync();
-            var categories = await _db.Categories.ToListAsync();
-            ViewBag.Categories = categories;
-            return View(featured);
+
+            // Get categories for the category section
+            ViewBag.Categories = await _db.Categories.ToListAsync();
+
+            return View(featuredProducts);
         }
 
         public IActionResult About()

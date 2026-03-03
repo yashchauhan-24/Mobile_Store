@@ -16,6 +16,10 @@
         <aside class="admin-sidebar p-3">
             <div class="mb-4">
                 <h4 class="text-cream">Admin Panel</h4>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <small class="text-muted d-block">@User.Identity.Name</small>
+                }
             </div>
 
             <nav class="nav flex-column">
@@ -24,6 +28,15 @@
                 <a class="nav-link text-cream" asp-area="Admin" asp-controller="Categories" asp-action="Index"><i class="fa-solid fa-tags me-2"></i>Categories</a>
                 <a class="nav-link text-cream" asp-area="Admin" asp-controller="Orders" asp-action="Index"><i class="fa-solid fa-receipt me-2"></i>Orders</a>
                 <a class="nav-link text-cream" asp-area="Admin" asp-controller="Users" asp-action="Index"><i class="fa-solid fa-users me-2"></i>Users</a>
+                <hr style="border-color: rgba(255,255,255,0.2);" />
+                <a class="nav-link text-cream" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fa-solid fa-store me-2"></i>View Store
+                </a>
+                <form asp-area="Admin" asp-controller="Auth" asp-action="Logout" method="post" class="mt-2">
+                    <button type="submit" class="nav-link text-cream border-0 bg-transparent text-start w-100">
+                        <i class="fa-solid fa-sign-out-alt me-2"></i>Logout
+                    </button>
+                </form>
             </nav>
         </aside>
 
@@ -32,6 +45,9 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">@ViewData["Title"]</h4>
                     <div>
+                        <span class="badge bg-success me-2">
+                            <i class="fa-solid fa-shield-halved me-1"></i>Admin
+                        </span>
                         <a class="btn btn-sm btn-outline-secondary" asp-area="" asp-controller="Home" asp-action="Index">
                             <i class="fa-solid fa-home me-1"></i> View Site
                         </a>
@@ -43,6 +59,13 @@
             {
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="fa-solid fa-check-circle me-2"></i>@TempData["success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fa-solid fa-exclamation-circle me-2"></i>@TempData["error"]
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }

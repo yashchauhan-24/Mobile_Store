@@ -58,16 +58,35 @@ namespace Mobile_Store.Controllers
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+            // Find user by email
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                TempData["error"] = "Invalid login attempt.";
+                return View(model);
+            }
+
+            // Check if user is admin - redirect them to admin login
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            if (isAdmin)
+            {
+                TempData["error"] = "Admin users must use the Admin Login page.";
+                return RedirectToAction("Login", "Auth", new { area = "Admin", returnUrl = model.ReturnUrl });
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName!, model.Password, model.RememberMe, lockoutOnFailure: false);
+            
             if (result.Succeeded)
             {
                 TempData["success"] = "Welcome back!";
                 if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                     return Redirect(model.ReturnUrl);
+                    
                 return RedirectToAction("Index", "Home");
             }
 
-            TempData["error"] = "Invalid login attempt.";
+            TempData["error"] = "Invalid login attempt. Please check your credentials.";
             return View(model);
         }
 

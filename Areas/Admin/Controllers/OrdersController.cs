@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mobile_Store.Data;
@@ -6,6 +7,7 @@ using Mobile_Store.Models;
 namespace Mobile_Store.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _db;

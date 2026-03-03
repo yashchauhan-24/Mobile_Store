@@ -32,10 +32,6 @@ namespace Mobile_Store.Data
             builder.Entity<CartItem>().ToTable("CartItems");
             builder.Entity<Wishlist>().ToTable("Wishlists");
             builder.Entity<Review>().ToTable("Reviews");
-
-            // Optional: remove seed data for Reviews that referenced null UserId
-            // Seeding reviews without valid UserId causes model validation errors because UserId is required.
-            // If you want initial reviews, create a valid ApplicationUser first and reference its Id here.
         }
     }
 }

@@ -3,46 +3,54 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
+<div class="container">
+    <div class="row justify-content-center mt-5">
         <div class="col-md-5">
-            <div class="admin-card p-4">
+            <div class="admin-card">
                 <div class="text-center mb-4">
-                    <div class="brand-logo mx-auto mb-3" style="width:64px;height:64px;font-size:1.5rem;">MS</div>
-                    <h3>Welcome Back</h3>
-                    <p class="text-muted">Sign in to your account</p>
+                    <h3><i class="fa-solid fa-sign-in-alt me-2"></i>Customer Login</h3>
+                    <p class="text-muted">Sign in to your customer account</p>
                 </div>
 
-                <form asp-controller="Account" asp-action="Login" method="post">
+                <form asp-action="Login" method="post">
                     <input type="hidden" asp-for="ReturnUrl" />
                     
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Email</label>
-                        <input asp-for="Email" class="form-control" placeholder="your@email.com" />
-                        <span asp-validation-for="Email" class="text-danger small"></span>
+                        <label asp-for="Email" class="form-label">Email Address</label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label asp-for="Password" class="form-label">Password</label>
-                        <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
-                        <span asp-validation-for="Password" class="text-danger small"></span>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
-                    
+
                     <div class="mb-3 form-check">
                         <input asp-for="RememberMe" class="form-check-input" />
                         <label asp-for="RememberMe" class="form-check-label">Remember me</label>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100 mb-3">
+
+                    <button type="submit" class="btn btn-primary w-100">
                         <i class="fa-solid fa-sign-in-alt me-2"></i>Login
                     </button>
-                    
-                    <div class="text-center">
-                        <p class="mb-0">Don't have an account? 
-                            <a asp-controller="Account" asp-action="Register">Register here</a>
-                        </p>
-                    </div>
                 </form>
+
+                <hr class="my-4" />
+
+                <div class="text-center">
+                    <p class="mb-2">Don't have an account? <a asp-action="Register" class="text-decoration-none">Register here</a></p>
+                </div>
+
+                <!-- Admin Login Link -->
+                <div class="alert alert-info mt-3 small text-center">
+                    <i class="fa-solid fa-shield-halved me-2"></i>
+                    <strong>Admin?</strong> 
+                    <a asp-area="Admin" asp-controller="Auth" asp-action="Login" class="text-decoration-none">
+                        Click here to access Admin Panel
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -51,7 +59,4 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-
-
-                        
 

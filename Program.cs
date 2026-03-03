@@ -24,6 +24,40 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    
+    // Configure admin area login redirect
+    options.Events.OnRedirectToLogin = context =>
+    {
+        // If request is for admin area, redirect to admin login
+        if (context.Request.Path.StartsWithSegments("/Admin"))
+        {
+            var returnUrl = context.Request.Path + context.Request.QueryString;
+            context.Response.Redirect("/Admin/Auth/Login?returnUrl=" + Uri.EscapeDataString(returnUrl));
+        }
+        else
+        {
+            context.Response.Redirect(context.RedirectUri);
+        }
+        return Task.CompletedTask;
+    };
+    
+    // Configure admin area access denied redirect
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        // If request is for admin area and user is authenticated but not authorized
+        if (context.Request.Path.StartsWithSegments("/Admin"))
+        {
+            var returnUrl = context.Request.Path + context.Request.QueryString;
+            context.Response.Redirect("/Admin/Auth/Login?returnUrl=" + Uri.EscapeDataString(returnUrl));
+        }
+        else
+        {
+            context.Response.Redirect(context.RedirectUri);
+        }
+        return Task.CompletedTask;
+    };
 });
 
 builder.Services.AddControllersWithViews();
@@ -61,6 +95,9 @@ using (var scope = app.Services.CreateScope())
         {
             db.Database.EnsureCreated();
         }
+
+        // Seed admin user and roles
+        await DbSeeder.SeedAdminUserAsync(services);
     }
     catch (Exception ex)
     {
