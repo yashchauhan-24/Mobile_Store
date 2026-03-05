@@ -20,7 +20,6 @@
     <Folder Include="Areas\Admin\Views\Accessories\" />
     <Folder Include="Areas\Admin\Views\AdminAccount\" />
     <Folder Include="Filters\" />
-    <Folder Include="Services\" />
     <Folder Include="Views\Accessories\" />
   </ItemGroup>
 

@@ -6,7 +6,7 @@ using Mobile_Store.Data;
 namespace Mobile_Store.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = "AdminCookie", Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _db;

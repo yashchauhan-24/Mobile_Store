@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Mobile_Store.Data;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         options.Password.RequireDigit = false;
@@ -19,45 +21,37 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Configure cookie paths
+// Configure TWO SEPARATE cookie authentication schemes
+builder.Services.AddAuthentication(options =>
+{
+    // Default scheme for client (public site)
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+})
+.AddCookie("AdminCookie", options =>
+{
+    // Admin-specific cookie configuration
+    options.Cookie.Name = ".MobileStore.Admin";
+    options.LoginPath = "/Admin/Auth/Login";
+    options.AccessDeniedPath = "/Admin/Auth/Login";
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
+// Configure Identity's default cookie
 builder.Services.ConfigureApplicationCookie(options =>
 {
+    options.Cookie.Name = ".MobileStore.Client";
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.SlidingExpiration = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
-    
-    // Configure admin area login redirect
-    options.Events.OnRedirectToLogin = context =>
-    {
-        // If request is for admin area, redirect to admin login
-        if (context.Request.Path.StartsWithSegments("/Admin"))
-        {
-            var returnUrl = context.Request.Path + context.Request.QueryString;
-            context.Response.Redirect("/Admin/Auth/Login?returnUrl=" + Uri.EscapeDataString(returnUrl));
-        }
-        else
-        {
-            context.Response.Redirect(context.RedirectUri);
-        }
-        return Task.CompletedTask;
-    };
-    
-    // Configure admin area access denied redirect
-    options.Events.OnRedirectToAccessDenied = context =>
-    {
-        // If request is for admin area and user is authenticated but not authorized
-        if (context.Request.Path.StartsWithSegments("/Admin"))
-        {
-            var returnUrl = context.Request.Path + context.Request.QueryString;
-            context.Response.Redirect("/Admin/Auth/Login?returnUrl=" + Uri.EscapeDataString(returnUrl));
-        }
-        else
-        {
-            context.Response.Redirect(context.RedirectUri);
-        }
-        return Task.CompletedTask;
-    };
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Lax;
 });
 
 builder.Services.AddControllersWithViews();
@@ -69,6 +63,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.IdleTimeout = TimeSpan.FromDays(7);
+    options.Cookie.Name = ".MobileStore.Session";
 });
 
 // Configure file upload size limits
