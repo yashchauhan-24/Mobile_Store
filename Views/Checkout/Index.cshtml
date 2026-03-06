@@ -9,6 +9,7 @@
     <h2 class="mb-4"><i class="fa-solid fa-credit-card me-2"></i>Checkout</h2>
 
     <form asp-controller="Checkout" asp-action="PlaceOrder" method="post" id="checkoutForm">
+        @Html.AntiForgeryToken()
         <div class="row">
             <!-- Order Summary -->
             <div class="col-lg-7 mb-4">
@@ -55,7 +56,7 @@
                     
                     <div class="mb-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="PaymentMethod" id="codPayment" 
+                            <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="codPayment" 
                                    value="Cash on Delivery" checked onclick="togglePaymentFields()" />
                             <label class="form-check-label" for="codPayment">
                                 <i class="fa-solid fa-hand-holding-dollar me-2"></i>
@@ -65,7 +66,7 @@
                         </div>
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="PaymentMethod" id="onlinePayment" 
+                            <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="onlinePayment" 
                                    value="Online Payment" onclick="togglePaymentFields()" />
                             <label class="form-check-label" for="onlinePayment">
                                 <i class="fa-solid fa-credit-card me-2"></i>
@@ -82,21 +83,21 @@
                         
                         <div class="mb-3">
                             <label asp-for="CardNumber" class="form-label">Card Number</label>
-                            <input asp-for="CardNumber" class="form-control" placeholder="1234 5678 9012 3456" 
+                            <input asp-for="CardNumber" class="form-control" id="CardNumber" placeholder="1234 5678 9012 3456" 
                                    maxlength="16" pattern="[0-9]*" />
                             <span asp-validation-for="CardNumber" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="CardHolderName" class="form-label">Card Holder Name</label>
-                            <input asp-for="CardHolderName" class="form-control" placeholder="John Doe" />
+                            <input asp-for="CardHolderName" class="form-control" id="CardHolderName" placeholder="John Doe" />
                             <span asp-validation-for="CardHolderName" class="text-danger small"></span>
                         </div>
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label asp-for="ExpiryMonth" class="form-label">Expiry Month</label>
-                                <select asp-for="ExpiryMonth" class="form-select">
+                                <select asp-for="ExpiryMonth" class="form-select" id="ExpiryMonth">
                                     <option value="">MM</option>
                                     @for (int i = 1; i <= 12; i++)
                                     {
@@ -108,7 +109,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label asp-for="ExpiryYear" class="form-label">Expiry Year</label>
-                                <select asp-for="ExpiryYear" class="form-select">
+                                <select asp-for="ExpiryYear" class="form-select" id="ExpiryYear">
                                     <option value="">YYYY</option>
                                     @for (int i = DateTime.Now.Year; i <= DateTime.Now.Year + 10; i++)
                                     {
@@ -120,7 +121,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label asp-for="CVV" class="form-label">CVV</label>
-                                <input asp-for="CVV" class="form-control" placeholder="123" maxlength="4" pattern="[0-9]*" />
+                                <input asp-for="CVV" class="form-control" id="CVV" placeholder="123" maxlength="4" pattern="[0-9]*" />
                                 <span asp-validation-for="CVV" class="text-danger small"></span>
                             </div>
                         </div>
@@ -140,19 +141,35 @@
                     
                     <!-- Cart Items -->
                     <div class="mb-3" style="max-height: 300px; overflow-y: auto;">
-                        @foreach (var item in items)
+                        @if (items != null && items.Any())
                         {
-                            <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                                @if (!string.IsNullOrEmpty(item.Product?.ImageUrl))
-                                {
-                                    <img src="@item.Product.ImageUrl" alt="@item.Product.Name" 
-                                         style="width:60px;height:60px;object-fit:cover;border-radius:4px;" class="me-3" />
-                                }
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">@item.Product?.Name</h6>
-                                    <small class="text-muted">Qty: @item.Quantity × Rs @item.Product?.Price.ToString("0.00")</small>
+                            @foreach (var item in items)
+                            {
+                                <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                    @if (!string.IsNullOrEmpty(item.ItemImageUrl))
+                                    {
+                                        <img src="@item.ItemImageUrl" alt="@item.ItemName" 
+                                             style="width:60px;height:60px;object-fit:cover;border-radius:4px;" class="me-3" />
+                                    }
+                                    else
+                                    {
+                                        <div style="width:60px;height:60px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;border-radius:4px;" class="me-3">
+                                            <i class="fa-solid fa-image text-muted"></i>
+                                        </div>
+                                    }
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">@item.ItemName</h6>
+                                        <small class="text-muted">Qty: @item.Quantity × Rs @item.ItemPrice.ToString("0.00")</small>
+                                    </div>
+                                    <strong>Rs @item.TotalPrice.ToString("0.00")</strong>
                                 </div>
-                                <strong>Rs @((item.Quantity * item.Product!.Price).ToString("0.00"))</strong>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                                No items in cart
                             </div>
                         }
                     </div>
@@ -176,7 +193,7 @@
                         <strong class="h5 text-primary">Rs @total.ToString("0.00")</strong>
                     </div>
 
-                    <button type="submit" class="btn btn-success w-100 mb-2">
+                    <button type="submit" class="btn btn-success w-100 mb-2" id="placeOrderBtn">
                         <i class="fa-solid fa-check me-2"></i>
                         <span id="placeOrderText">Place Order</span>
                     </button>
@@ -202,33 +219,62 @@
             var onlinePaymentFields = document.getElementById('onlinePaymentFields');
             var placeOrderText = document.getElementById('placeOrderText');
             
-            if (onlinePayment.checked) {
+            if (onlinePayment && onlinePayment.checked) {
                 onlinePaymentFields.style.display = 'block';
                 placeOrderText.textContent = 'Pay & Place Order';
                 
                 // Make card fields required
-                document.getElementById('CardNumber').required = true;
-                document.getElementById('CardHolderName').required = true;
-                document.getElementById('CVV').required = true;
+                var cardNumber = document.getElementById('CardNumber');
+                var cardHolderName = document.getElementById('CardHolderName');
+                var cvv = document.getElementById('CVV');
+                var expiryMonth = document.getElementById('ExpiryMonth');
+                var expiryYear = document.getElementById('ExpiryYear');
+                
+                if (cardNumber) cardNumber.required = true;
+                if (cardHolderName) cardHolderName.required = true;
+                if (cvv) cvv.required = true;
+                if (expiryMonth) expiryMonth.required = true;
+                if (expiryYear) expiryYear.required = true;
             } else {
                 onlinePaymentFields.style.display = 'none';
                 placeOrderText.textContent = 'Place Order';
                 
                 // Remove required from card fields
-                document.getElementById('CardNumber').required = false;
-                document.getElementById('CardHolderName').required = false;
-                document.getElementById('CVV').required = false;
+                var cardNumber = document.getElementById('CardNumber');
+                var cardHolderName = document.getElementById('CardHolderName');
+                var cvv = document.getElementById('CVV');
+                var expiryMonth = document.getElementById('ExpiryMonth');
+                var expiryYear = document.getElementById('ExpiryYear');
+                
+                if (cardNumber) cardNumber.required = false;
+                if (cardHolderName) cardHolderName.required = false;
+                if (cvv) cvv.required = false;
+                if (expiryMonth) expiryMonth.required = false;
+                if (expiryYear) expiryYear.required = false;
             }
         }
 
         // Card number formatting
-        document.getElementById('CardNumber')?.addEventListener('input', function(e) {
-            this.value = this.value.replace(/\D/g, '');
-        });
+        var cardNumberInput = document.getElementById('CardNumber');
+        if (cardNumberInput) {
+            cardNumberInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '');
+            });
+        }
 
         // CVV formatting
-        document.getElementById('CVV')?.addEventListener('input', function(e) {
-            this.value = this.value.replace(/\D/g, '');
+        var cvvInput = document.getElementById('CVV');
+        if (cvvInput) {
+            cvvInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '');
+            });
+        }
+
+        // Form submission handling
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            var btn = document.getElementById('placeOrderBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
         });
     </script>
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mobile_Store.Data;
 
@@ -11,9 +12,11 @@ using Mobile_Store.Data;
 namespace Mobile_Store.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260305201804_AddMobileAccessoriesTable")]
+    partial class AddMobileAccessoriesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,47 +158,6 @@ namespace Mobile_Store.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Mobile_Store.Models.AccessoryReview", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccessoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsVerifiedPurchase")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewerName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccessoryId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AccessoryReviews", (string)null);
-                });
-
             modelBuilder.Entity("Mobile_Store.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -297,10 +259,7 @@ namespace Mobile_Store.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("MobileAccessoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -311,8 +270,6 @@ namespace Mobile_Store.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MobileAccessoryId");
 
                     b.HasIndex("ProductId");
 
@@ -565,13 +522,7 @@ namespace Mobile_Store.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("AddedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("MobileAccessoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -579,8 +530,6 @@ namespace Mobile_Store.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MobileAccessoryId");
 
                     b.HasIndex("ProductId");
 
@@ -638,38 +587,13 @@ namespace Mobile_Store.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Mobile_Store.Models.AccessoryReview", b =>
-                {
-                    b.HasOne("Mobile_Store.Models.MobileAccessory", "Accessory")
-                        .WithMany("Reviews")
-                        .HasForeignKey("AccessoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Mobile_Store.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Accessory");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Mobile_Store.Models.CartItem", b =>
                 {
-                    b.HasOne("Mobile_Store.Models.MobileAccessory", "MobileAccessory")
-                        .WithMany()
-                        .HasForeignKey("MobileAccessoryId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Mobile_Store.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("MobileAccessory");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Product");
                 });
@@ -747,24 +671,13 @@ namespace Mobile_Store.Migrations
 
             modelBuilder.Entity("Mobile_Store.Models.Wishlist", b =>
                 {
-                    b.HasOne("Mobile_Store.Models.MobileAccessory", "MobileAccessory")
-                        .WithMany()
-                        .HasForeignKey("MobileAccessoryId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Mobile_Store.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("MobileAccessory");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Mobile_Store.Models.MobileAccessory", b =>
-                {
-                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Mobile_Store.Models.Order", b =>
